@@ -3,9 +3,9 @@ const graphql = require('graphql');
 const { GraphQLObjectType, GraphQLString, GraphQLSchema, GraphQLID, GraphQLInt } = graphql;
 
 let books = [
-    { id: "1", genre: 'fantasy', name: 'book1' },
-    { id: "2", genre: 'fantasy', name: 'book2' },
-    { id: "3", genre: 'comedy', name: 'book3' }
+    { id: "1", genre: 'fantasy', name: 'book1', authorId: '2' },
+    { id: "2", genre: 'fantasy', name: 'book2', authorId: '1' },
+    { id: "3", genre: 'comedy', name: 'book3', authorId: '3' }
 ];
 let authors = [
     { id: "1", age: 40, name: 'Mom' },
@@ -18,7 +18,13 @@ const BookType = new GraphQLObjectType({
     fields: () => ({
         id: { type: GraphQLID },
         name: { type: GraphQLString },
-        genre: { type: GraphQLString }
+        genre: { type: GraphQLString },
+        author: {
+            type: AuthorType,
+            resolve(parent, args) {
+                return authors.find(item => item.id === parent.authorId);
+            }
+        }
     })
 });
 
